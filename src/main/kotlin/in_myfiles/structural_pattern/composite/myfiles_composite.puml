@@ -1,0 +1,25 @@
+@startuml
+class Main <<client>>
+interface FileInfo {
+    {method} getName(): String
+    {method} getSize(): String
+    {method} isFile(): Boolean
+    {method} showDetails()
+}
+class OnlyFileInfo <<D, orange>> implements FileInfo {
+    {field} -name: String
+    {field} -size: Long
+}
+class DirectoryFileInfo <<D, orange>> implements FileInfo {
+    {field} -name: String
+    {field} +files: List<FileInfo>
+}
+object FileInfoDataSource {
+    {static} {method} getOnlyFileInfo(): FileInfo
+    {static} {method} getDirectoryFileInfo(): FileInfo
+}
+skinparam groupInheritance 2
+Main --> FileInfoDataSource
+DirectoryFileInfo o--> FileInfo : +files
+FileInfoDataSource --> FileInfo
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+class Main <<client>>
+interface IFileOperation {
+    doOperation(): String
+}
+class CopyOperation
+class MoveOperation
+class DownloadOperation extends DecoratorOperation
+class MultipleStorageDecoration extends DecoratorOperation
+abstract class DecoratorOperation {
+    {field} +decorator: IFileOperation
+    {abstract}{method} doExtraOperation(): String
+}
+Main --> DecoratorOperation : doOperation()
+DecoratorOperation o--> IFileOperation : +decorator
+DecoratorOperation --|> IFileOperation
+CopyOperation --|> IFileOperation
+MoveOperation --|> IFileOperation
+@enduml

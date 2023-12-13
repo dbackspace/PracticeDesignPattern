@@ -1,0 +1,58 @@
+@startuml
+class Main <<client>>
+abstract class AbsExecute {
+    {abstract} {method} onExecute(menuType: Int, executable: IExecutable): Boolean
+}
+class ExecuteCopy extends AbsExecute
+class ExecuteDefault extends AbsExecute
+class ExecuteDelete extends AbsExecute
+class ExecuteMove extends AbsExecute
+class FileListController implements ResultListener {
+    {method} handleExecuteMenu(menuType: Int)
+}
+class FileOperationResult <<D, orange>> {
+    {field} +menuType: Int
+    {field} +isSuccess: Boolean
+    {field} +isCancelled: Boolean
+    {field} +needRefresh: Boolean
+}
+interface IExecutable {
+    onResult(result: FileOperationResult)
+}
+class MenuExecuteManager implements IExecutable {
+    {field} -executionMap = HashMap<Int, AbsExecute>
+    {static} {field} setOfCallbackListener = HashSet<ResultListener>
+    {static} {method} addDataCallbackListener(listener: ResultListener)
+    {static} {method} removeDataCallbackListener((listener: ResultListener)
+
+    {method} -getExecution(menuType: Int): AbsExecute
+    {method} execute(menuType: Int): Boolean
+    {method} -needNotifyResult(result: MenuExecuteResult): Boolean
+    {method} -notifyResultListener(menuResult: MenuExecuteResult)
+}
+class MenuExecuteResult <<D, orange>> {
+    {field} +menuType: Int
+    {field} +isSuccess: Boolean
+    {field} +isCancelled: Boolean
+    {field} +needRefresh: Boolean
+}
+object MenuType {
+    {static} {field} UNDEFINED, COPY, MOVE, DELETE
+}
+interface ResultListener {
+    onResult(result: MenuExecuteResult)
+}
+
+skinparam groupInheritance 2
+
+Main --> FileListController: handleExecuteMenu()
+FileListController --> MenuExecuteManager: addDataCallbackListener()\n execute()
+MenuExecuteManager --> AbsExecute: onExecute()
+AbsExecute --> IExecutable: onResult()
+IExecutable --> MenuExecuteManager: onResult(result: FileOperationResult)
+MenuExecuteManager --> ResultListener: onResult()
+ResultListener --> FileListController: onResult(result: MenuExecuteResult))
+MenuExecuteManager --> MenuType: -executionMap
+MenuExecuteManager o--> MenuExecuteResult
+AbsExecute o--> FileOperationResult
+@enduml

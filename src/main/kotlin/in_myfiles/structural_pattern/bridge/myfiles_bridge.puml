@@ -1,0 +1,70 @@
+@startuml
+object Resource {
+    {field} +bridge: ResourceBridge
+    {static} init(res: ResourceBridge)
+
+    {static} {method} get(): ResourceRequest
+    {static} {method} DefaultRes(): ResourceRequest
+    {static} {method} HomeRes(): ResourceRequest
+    {static} {method} StorageRes(): ResourceRequest
+    {static} {method} CloudRes(): ResourceRequest, Cloud
+}
+interface ResourceRequest {
+    string(id: Int): Int
+    dimen(id: Int): Int
+    drawable(id: Int): Int
+    color(id: Int): Int
+}
+interface ResourceBridge {
+    getResource(feature: Int): ResourceRequest
+}
+object ResourceManager <<factory>> {
+    init()
+    getResource(feature: Int): ResourceRequest
+}
+object ResourceResId {
+    {static} StringRes
+    {static} DrawableRes
+    {static} DimenRes
+    {static} ColorRes
+}
+abstract class ResRequest implements ResourceRequest {
+    {field} #strIdMap: HashMap<Int, Int>
+    {field} #drawableMap: HashMap<Int, Int>
+    {field} #colorMap: HashMap<Int, Int>
+    {field} #dimenMap: HashMap<Int, Int>
+    {method} string(id: Int): Int <i><<strIdMap[id]>>
+    {method} drawable(id: Int): Int <i><<drawableMap[id]>>
+    {method} color(id: Int): Int <i><<colorMap[id]>>
+    {method} dimen(id: Int): Int <i><<dimenMap[id]>>
+}
+class Main <<client>>
+class HomeResRequest implements ResRequest {
+    {method} init{...}
+}
+class StorageResRequest implements ResRequest {
+    {method} init{...}
+}
+class CloudResRequest implements ResRequest {
+    {method} init{...}
+}
+class DefaultResRequest implements ResRequest {
+    {method} init{...}
+}
+object Feature {
+    +<b><color: brown>DEFAULT, HOME, STORAGE, CLOUD
+}
+skinparam groupInheritance 2
+ResourceBridge --> ResRequest
+Resource o--> ResourceBridge
+ResourceManager --|> ResourceBridge
+ResourceManager --> Resource : init()
+Resource -right-> Feature
+ResourceManager --> Feature
+ResRequest --> ResourceResId
+Main --> ResourceManager: init()
+
+note "use directly" as N1
+OtherClass o-- N1
+N1 --> Resource
+@enduml

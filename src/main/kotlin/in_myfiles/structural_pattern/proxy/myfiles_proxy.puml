@@ -1,0 +1,20 @@
+@startuml
+class Main <<client>>
+object CachedThumbnailDataSource {
+    {static} {field} +cachedThumbnailMap: HashMap<String, String>
+}
+interface ThumbnailInterface {
+    getThumbnailPath(requestPath: String): String?
+}
+class DownloadThumbnail implements ThumbnailInterface {
+    -downloadThumbnailPath(requestPath: String): String
+}
+class CachedThumbnail implements ThumbnailInterface {
+    {field} -downloadThumbnail: DownloadThumbnail?
+    {method} -hasCached(requestPath: String): String?
+}
+skinparam groupInheritance 2
+Main --> CachedThumbnail : getThumbnailPath()
+CachedThumbnail o--> DownloadThumbnail: -downloadThumbnail
+CachedThumbnail --> CachedThumbnailDataSource : -hasCached()
+@enduml

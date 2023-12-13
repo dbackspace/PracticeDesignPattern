@@ -1,0 +1,59 @@
+@startuml
+class Main <<client>>
+abstract class AbsFileRepository <<T: FileInfo>> implements IFileInfoRepository {
+    {abstract} {method} getFileInfoList(queryParams: QueryParams): List<T>
+}
+interface FileInfo {
+    getFileId(): String
+    getPath(): String
+}
+interface IFileInfoRepository <<T: FileInfo>> {
+    getFileInfoList(queryParams: QueryParams): List<T>
+    getFileInfoByPath(path: String): T
+    getFileInfoById(fileId: String): T
+    deleteByFileId(fileId: String): Boolean
+}
+class QueryParams {
+    {field}+searchType: SearchType
+}
+class SearchCloudDataSource implements SearchInterface
+class SearchController {
+    {field}-searchRepository: IFileInfoRepository<SearchFileInfo>
+    {method}+getFileInfoList(queryParams: QueryParams): List<SearchFileInfo>
+}
+interface SearchDataSource {
+    getSearchFileInfoList(queryParams: QueryParams): List<SearchFileInfo>
+}
+class SearchDataSourceImpl implements SearchDataSource {
+    {field}-searchMap: EnumMap<SearchType, SearchInterface>
+}
+class SearchFileInfo implements FileInfo {
+    {field}-fileId: String
+    {field}-path: String
+}
+interface SearchInterface {
+    query(): List<SearchFileInfo>
+}
+class SearchLocalDataSource implements SearchInterface
+abstract class SearchRepository <<SearchFileInfo>> extends AbsFileRepository {
+    {abstract} {method} getFileInfoList(queryParams: QueryParams): List<SearchFileInfo>
+}
+class SearchRepositoryImpl extends SearchRepository {
+    {field}-searchDataSource: SearchDataSource
+    {static} {field}-instance: SearchRepository?
+    {static} {method}+getInstance(searchDataSource: SearchDataSource): SearchRepository
+}
+enum SearchType {
+    LOCAL, CLOUD
+}
+
+skinparam groupInheritance 2
+Main --> SearchController: getFileInfoList()
+SearchController *--> IFileInfoRepository: getFileInfoList()
+SearchLocalDataSource --> SearchFileInfo
+SearchCloudDataSource --> SearchFileInfo
+SearchRepositoryImpl *--> SearchDataSource: getInstance()
+SearchDataSourceImpl --> SearchType
+SearchDataSourceImpl --> QueryParams
+SearchDataSourceImpl *--> SearchInterface: -searchMap
+@enduml

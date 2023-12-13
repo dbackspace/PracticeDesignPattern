@@ -1,0 +1,20 @@
+@startuml
+class Main <<client>>
+object FileInfoDataSource {
+    {static} {method} getListFileInfo(): MutableList<FileInfo>
+}
+class FileInfo <<D, orange>> {
+    {field} +name: String
+    {field} +ext: String
+    {field} +time: Long
+    {field} +size: Long
+}
+interface Iterable <<FileInfo>>
+class DirectoryIterator implements Iterable {
+    {field} -files: List<FileInfo>
+}
+Main --> FileInfoDataSource : getListFileInfo()
+FileInfoDataSource --> FileInfo
+DirectoryIterator o..> FileInfoDataSource
+Main --> DirectoryIterator : forEach {}
+@enduml

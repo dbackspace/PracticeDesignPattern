@@ -1,0 +1,34 @@
+@startuml
+class Main <<client>>
+object BehaviorType {
+    {static} {field} +DEFAULT
+    {static} {field} +EXPANDABLE
+    {static} {field} +CUSTOM
+}
+class CustomListBehavior extends DefaultListBehavior {
+}
+class DefaultListBehavior {
+    {method} #updateItems(items: List<String>)
+}
+class ExpandableListBehavior extends DefaultListBehavior {
+}
+interface FileListBehavior {
+    setCurrentPageInfo(currentPageInfo: PageInfo)
+    initListener()
+    setCurrentViewAs(currentViewAs: Int)
+    notifyListAdapter()
+}
+object ListBehaviorFactory {
+    {static} {method} createListBehavior(behaviorType: Int): FileListBehavior
+}
+class PageInfo <<D, orange>> {
+    {field} + pageName: String
+}
+
+skinparam groupInheritance 2
+Main --> ListBehaviorFactory: createListBehavior()
+ListBehaviorFactory --> FileListBehavior
+FileListBehavior <-- DefaultListBehavior
+ListBehaviorFactory --> BehaviorType
+DefaultListBehavior o-right-> PageInfo: setCurrentPageInfo()
+@enduml

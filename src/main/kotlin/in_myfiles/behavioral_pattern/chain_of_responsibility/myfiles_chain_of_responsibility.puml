@@ -1,0 +1,29 @@
+@startuml
+class Main <<client>>
+interface HomeItemInterface {
+    {method} setNext(homeItem: HomeItem)
+    {method} initLayout()
+    {method} isVisible(): Boolean
+}
+abstract class HomeItem implements HomeItemInterface {
+    {abstract} {method} bindLayout()
+}
+class LocalStorageItem extends HomeItem
+class CategoryItem extends HomeItem
+class RecentItem extends HomeItem
+class AnalyzeStorageItem extends HomeItem
+object Feature {
+    {static}{method} isSupportRecent(): Boolean
+    {static}{method} isSupportLocalStorage(): Boolean
+    {static}{method} isSupportAnalyzeStorage(): Boolean
+}
+object HomeUtils {
+    {static}{method} getHomeItemChain(): HomeItemInterface
+}
+skinparam groupInheritance 2
+Main --> HomeUtils : getHomeItemChain()
+HomeUtils --> HomeItemInterface
+HomeItem --> Feature
+HomeItemInterface --> HomeItemInterface : +next
+
+@enduml

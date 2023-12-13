@@ -1,0 +1,13 @@
+@startuml
+class Main <<client>>
+class SearchDataSource {
+    {static} {field} -instance: SearchDataSource?
+    {static} {method} +getInstance(): SearchDataSource
+    {method} +query(searchType: SearchType)
+}
+enum SearchType {
+    +<b><color: brown>LOCAL, CLOUD
+}
+Main --> SearchDataSource : getInstance()
+SearchDataSource --> SearchType : query()
+@enduml

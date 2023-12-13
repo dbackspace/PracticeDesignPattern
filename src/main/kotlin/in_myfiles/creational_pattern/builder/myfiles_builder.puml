@@ -1,0 +1,13 @@
+@startuml
+class DialogBuilder <<builder>> {
+    {method} setTitle(title: String)
+    {method} setMessage(message: String)
+    {method} setPositiveButton(positiveButton: String)
+    {method} setNeutralButton(neutralButton: String)
+    {method} setNegativeButton(negativeButton: String)
+
+    {method} build(): DialogBuilder
+}
+class Main <<client>>
+Main --> DialogBuilder
+@enduml

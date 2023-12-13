@@ -1,0 +1,31 @@
+@startuml
+class Main <<client>>
+abstract class AbstractMarketFactory {
+    createTrashItem(): HomeItem
+    createCloudItem(): HomeItem
+}
+class OpenMarketFactory extends AbstractMarketFactory
+class ChinaMarketFactory extends AbstractMarketFactory
+enum FactoryType {
+    OPEN, CHINA
+}
+interface HomeItem {
+    showItem()
+}
+object MarketFactory {
+    {static} {method} getMarketFactory(factoryType: FactoryType): AbstractMarketFactory
+}
+
+skinparam groupInheritance 2
+Main --> MarketFactory
+MarketFactory --> AbstractMarketFactory : getMarketFactory()
+MarketFactory --> FactoryType
+OpenTrashItem --|> HomeItem
+OpenCloudItem --|> HomeItem
+ChinaTrashItem --|> HomeItem
+ChinaCloudItem --|> HomeItem
+OpenMarketFactory --> OpenTrashItem : createTrashItem()
+OpenMarketFactory --> OpenCloudItem : createCloudItem()
+ChinaMarketFactory --> ChinaTrashItem : createTrashItem()
+ChinaMarketFactory --> ChinaCloudItem : createCloudItem()
+@enduml

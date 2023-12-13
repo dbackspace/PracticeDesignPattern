@@ -1,0 +1,12 @@
+@startuml
+class Main <<client>>
+class FileInfo <<O, orchid>> implements Cloneable {
+    {field} -name: String
+    {field} -size: Long
+    {field} -isGroupHeader: Boolean
+
+    {method} createGroupHeader()
+    {method} clone(): FileInfo
+}
+Main --> FileInfo
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+class Main <<client>>
+class HomePageController {
+    {method} +loadData()
+    {method} -observeUiState(state: UiState)
+}
+class UiState <<S, magenta, sealed class>> {
+    +<b><color: brown>{field} Loading
+    +<b><color: brown>{field} Success(val successMessage: String)
+    +<b><color: brown>{field} Error(val errorMessage: String)
+}
+Main --> HomePageController : loadData()
+HomePageController --> UiState : observeUiState()
+@enduml

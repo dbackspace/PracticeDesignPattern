@@ -1,0 +1,18 @@
+@startuml
+class Main <<client>>
+object ComparatorFactory {
+    {static} {method} getSortByComparator(sortType: SortType, isAscending: Boolean): Comparator<FileInfo>
+}
+interface Comparator <<FileInfo>>
+class NameComparator implements Comparator
+class ExtensionComparator implements Comparator
+class TimeComparator implements Comparator
+class SizeComparator implements Comparator
+object FileInfoDataSource {
+    {static}{method} getListFileInfo(): MutableList<FileInfo>
+}
+skinparam groupInheritance 2
+Main --> FileInfoDataSource : getListFileInfo()
+Main --> ComparatorFactory : getSortByComparator()
+ComparatorFactory --> Comparator
+@enduml
