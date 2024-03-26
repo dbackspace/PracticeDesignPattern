@@ -5,10 +5,6 @@ package in_myfiles.structural_pattern.decorator
  */
 
 fun main(args: Array<String>) {
-    val operation = DownloadOperation().apply {
-        decorator = MultipleStorageDecoration().apply {
-            decorator = CopyOperation()
-        }
-    }
+    val operation = DownloadOperation(MultipleStorageDecoration(CopyOperation()))
     println(operation.doOperation())
 }
